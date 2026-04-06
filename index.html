@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#07070f"/>
+<title>StyleCraft – Premium Name & Bio Studio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --bg:#07070f;--bg-card:rgba(255,255,255,.035);--bg-ch:rgba(255,255,255,.06);
+  --bdr:rgba(255,255,255,.07);--bdr-lit:rgba(99,179,255,.28);
+  --blue:#4f9eff;--purple:#9b6dff;--cyan:#00d4aa;
+  --text:#eef0ff;--text2:rgba(238,240,255,.55);--text3:rgba(238,240,255,.28);
+  --r:20px;--rm:14px;--rs:9px;
+  --spring:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;user-select:none;}
+
+/* BG */
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bg-noise{background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+.bg-orbs{background:radial-gradient(ellipse 85% 65% at 15% 8%,rgba(79,158,255,.07) 0%,transparent 55%),radial-gradient(ellipse 70% 55% at 88% 88%,rgba(155,109,255,.08) 0%,transparent 55%),radial-gradient(ellipse 50% 45% at 50% 48%,rgba(0,212,170,.04) 0%,transparent 65%);animation:orb 12s ease-in-out infinite alternate}
+@keyframes orb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.07) translate(6px,-6px)}}
+.bg-grid{background-image:linear-gradient(rgba(79,158,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(79,158,255,.028) 1px,transparent 1px);background-size:48px 48px}
+
+/* APP */
+#app{position:relative;z-index:1;max-width:460px;margin:0 auto;padding-bottom:96px;min-height:100vh}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(7,7,15,.9);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid var(--bdr);padding:10px 14px 8px;}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-size:20px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(95deg,var(--blue) 0%,var(--purple) 50%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 14px rgba(79,158,255,.45));animation:logoGlow 4s ease-in-out infinite alternate;}
+@keyframes logoGlow{from{filter:drop-shadow(0 0 10px rgba(79,158,255,.4))}to{filter:drop-shadow(0 0 22px rgba(155,109,255,.6))}}
+.logo-sub{font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.icon-btn{width:34px;height:34px;border-radius:10px;cursor:pointer;background:var(--bg-card);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;flex-shrink:0}
+.icon-btn:hover{background:var(--bg-ch);border-color:var(--bdr-lit)}
+.icon-btn:active{transform:scale(.88)}
+
+/* LANGUAGE SELECTOR in Header */
+.lang-select{height:34px;padding:0 10px;background:var(--bg-card);border:1px solid var(--bdr);border-radius:10px;color:var(--text2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;outline:none;transition:all .2s;-webkit-appearance:none;appearance:none;min-width:76px;text-align:center;}
+.lang-select:hover{border-color:var(--bdr-lit);background:var(--bg-ch)}
+.lang-select option{background:#0f0f1a;color:#eef0ff;font-size:13px}
+
+/* SAFETY ALERT BANNER */
+.alert-banner{margin:10px 13px 0;padding:11px 14px;background:linear-gradient(135deg,rgba(255,80,80,.1),rgba(255,140,0,.08));border:1.5px solid rgba(255,100,60,.35);border-radius:var(--rm);display:flex;gap:9px;align-items:flex-start;animation:alertPulse 3s ease-in-out infinite;}
+@keyframes alertPulse{0%,100%{border-color:rgba(255,100,60,.35)}50%{border-color:rgba(255,100,60,.65)}}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.alert-text{font-size:11.5px;line-height:1.55;font-weight:600;color:rgba(255,180,140,.92);letter-spacing:.1px}
+
+/* SCREENS */
+.scr{display:none;padding:13px}
+.scr.active{display:block;animation:scrIn .3s var(--out)}
+@keyframes scrIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--r);padding:17px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 24px rgba(0,0,0,.5);margin-bottom:12px;transition:border-color .3s}
+.card:hover{border-color:rgba(79,158,255,.11)}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--bdr),transparent)}
+.fld-lbl{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.4px;margin-bottom:7px}
+
+/* INPUT */
+.ibox{position:relative;margin-bottom:12px}
+.ibox input{width:100%;padding:13px 42px 13px 15px;background:rgba(255,255,255,.04);border:1.5px solid var(--bdr);border-radius:var(--rm);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;outline:none;transition:all .25s;caret-color:var(--cyan)}
+.ibox input::placeholder{color:var(--text3);font-weight:400}
+.ibox input:focus{border-color:var(--blue);background:rgba(79,158,255,.05);box-shadow:0 0 0 3px rgba(79,158,255,.12)}
+.ibox .ico{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.4;pointer-events:none}
+
+/* GENERATE BTN */
+.btn-gen{width:100%;padding:13px;background:linear-gradient(130deg,#1a5fff 0%,#7c3aed 60%,#0099cc 100%);background-size:200% 200%;background-position:0 50%;border:none;border-radius:var(--rm);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;letter-spacing:.4px;cursor:pointer;position:relative;overflow:hidden;transition:all .3s;box-shadow:0 4px 20px rgba(30,80,255,.35);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gen:hover{background-position:100% 50%;box-shadow:0 6px 32px rgba(124,58,237,.45);transform:translateY(-1px)}
+.btn-gen:active{transform:scale(.97) translateY(0)}
+
+/* PILLS */
+.pills{display:flex;gap:8px;margin-bottom:13px}
+.pill{flex:1;padding:10px 5px;background:rgba(255,255,255,.04);border:1.5px solid var(--bdr);border-radius:50px;color:var(--text2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-align:center;transition:all .22s;position:relative;overflow:hidden}
+.pill:active{transform:scale(.95)}
+.pill.active{background:linear-gradient(130deg,rgba(79,158,255,.18),rgba(155,109,255,.18));border-color:var(--blue);color:var(--text);box-shadow:0 0 18px rgba(79,158,255,.18)}
+
+/* RESULTS */
+.res-count{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px;margin-bottom:9px}
+.res-count b{color:var(--cyan)}
+.names-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px}
+.name-card{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--rm);padding:11px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;position:relative;overflow:hidden;transition:all .25s;animation:popIn .4s var(--spring) both}
+.name-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,158,255,.06),rgba(155,109,255,.06));opacity:0;transition:opacity .25s}
+.name-card:hover::before{opacity:1}
+.name-card:hover{border-color:rgba(79,158,255,.3);transform:translateY(-2px);box-shadow:0 8px 20px rgba(79,158,255,.1)}
+.name-card:active{transform:scale(.95)}
+@keyframes popIn{from{opacity:0;transform:scale(.82) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.name-txt{font-size:14px;font-weight:700;text-align:center;word-break:break-all;line-height:1.3;color:var(--text)}
+.chip{background:rgba(79,158,255,.12);border:1px solid rgba(79,158,255,.22);border-radius:20px;color:rgba(79,158,255,.9);font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:1px;padding:3px 10px;cursor:pointer;transition:all .2s;flex-shrink:0}
+.chip:hover{background:rgba(79,158,255,.22);box-shadow:0 0 10px rgba(79,158,255,.22)}
+.chip:active{transform:scale(.87)}
+.row-res{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:var(--rm);padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;margin-bottom:7px;animation:popIn .35s var(--spring) both;transition:all .25s}
+.row-res:hover{border-color:rgba(155,109,255,.28);background:rgba(155,109,255,.04);transform:translateX(3px)}
+
+/* LOADING */
+.loader{display:none;flex-direction:column;align-items:center;gap:12px;padding:30px}
+.loader.on{display:flex}
+.ring{width:42px;height:42px;border:2.5px solid rgba(255,255,255,.06);border-top-color:var(--blue);border-right-color:var(--purple);border-radius:50%;animation:spin .65s linear infinite;box-shadow:0 0 16px rgba(79,158,255,.3)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dots{display:flex;gap:5px}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--blue);opacity:.3;animation:db 1s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.15s;background:var(--purple)}
+.dots span:nth-child(3){animation-delay:.3s;background:var(--cyan)}
+@keyframes db{0%,80%,100%{transform:scale(.8);opacity:.3}40%{transform:scale(1.3);opacity:1}}
+.load-lbl{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase}
+.shimmer-g{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px}
+.shimmer-g.on{display:grid}
+.sh-card{height:67px;border-radius:var(--rm);background:linear-gradient(90deg,rgba(255,255,255,.03) 0%,rgba(79,158,255,.07) 50%,rgba(255,255,255,.03) 100%);background-size:200% 100%;animation:sh 1.3s ease-in-out infinite}
+@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+
+/* BIO */
+.bio-box{background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:var(--r);padding:20px;min-height:100px;margin-bottom:10px;transition:all .3s}
+.bio-box.lit{border-color:rgba(155,109,255,.32);box-shadow:0 0 24px rgba(155,109,255,.1)}
+.bio-txt{font-size:15px;line-height:1.75;font-weight:500;color:var(--text);animation:rev .4s var(--out)}
+@keyframes rev{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bio-ph{font-size:13px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-align:center;padding:18px 0}
+.bio-acts{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.bio-meta{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.btn-cbio{padding:8px 18px;background:linear-gradient(130deg,rgba(155,109,255,.2),rgba(79,158,255,.2));border:1.5px solid rgba(155,109,255,.3);border-radius:50px;color:rgba(155,109,255,.9);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
+.btn-cbio:hover{background:rgba(155,109,255,.3);box-shadow:0 0 14px rgba(155,109,255,.25)}
+.btn-cbio:active{transform:scale(.94)}
+.trend-row{display:flex;align-items:center;gap:10px;margin:15px 0 9px}
+.badge-hot{font-size:9.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;box-shadow:0 0 14px rgba(79,158,255,.35);animation:bpulse 2.5s ease-in-out infinite;font-family:'JetBrains Mono',monospace}
+@keyframes bpulse{0%,100%{box-shadow:0 0 14px rgba(79,158,255,.35)}50%{box-shadow:0 0 28px rgba(155,109,255,.5)}}
+.badge-sub{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+
+/* FANCY */
+.fancy-list{display:grid;gap:7px;margin-top:3px}
+.fancy-row{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--rm);padding:11px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .22s;animation:popIn .3s var(--spring) both;position:relative;overflow:hidden}
+.fancy-row::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--blue),var(--purple));opacity:0;transition:opacity .25s}
+.fancy-row:hover::after{opacity:1}
+.fancy-row:hover{border-color:rgba(0,212,170,.25);background:rgba(0,212,170,.03);transform:translateX(4px)}
+.fancy-row:active{transform:translateX(2px) scale(.99)}
+.stag{font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:5px;padding:2px 7px;white-space:nowrap;flex-shrink:0}
+.fancy-txt{flex:1;font-size:16px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* SYMBOLS */
+.sym-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:4px}
+.sym-cell{background:var(--bg-card);border:1px solid var(--bdr);border-radius:var(--rm);padding:13px 4px;text-align:center;font-size:19px;cursor:pointer;position:relative;overflow:hidden;transition:all .22s;animation:popIn .4s var(--spring) both}
+.sym-cell:hover{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,212,170,.25),inset 0 0 12px rgba(0,212,170,.05);transform:scale(1.1) translateY(-2px);background:rgba(0,212,170,.05)}
+.sym-cell:active{transform:scale(.9)}
+.sym-flash{position:absolute;inset:0;background:rgba(0,212,170,.25);border-radius:inherit;animation:fl .4s ease-out forwards}
+@keyframes fl{from{opacity:1}to{opacity:0}}
+
+/* TOAST */
+#toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%) translateY(14px) scale(.92);background:rgba(7,7,15,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid rgba(0,212,170,.4);border-radius:50px;padding:10px 22px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;white-space:nowrap;opacity:0;pointer-events:none;z-index:9999;box-shadow:0 4px 24px rgba(0,212,170,.2);transition:all .35s var(--spring)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+.empty{text-align:center;padding:38px 20px}
+.empty .eico{font-size:34px;margin-bottom:10px;opacity:.45}
+.empty p{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:rgba(7,7,15,.95);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-top:1px solid var(--bdr);display:flex;z-index:200;padding:7px 0 10px}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 4px;cursor:pointer;position:relative;overflow:hidden;transition:all .25s}
+.nico{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .3s var(--spring);background:transparent}
+.nlbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);font-family:'JetBrains Mono',monospace;transition:color .25s}
+.npip{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:0;height:2px;border-radius:1px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .3s var(--spring)}
+.nbtn.active .nico{background:linear-gradient(130deg,rgba(79,158,255,.18),rgba(155,109,255,.18));box-shadow:0 0 14px rgba(79,158,255,.18);transform:scale(1.1) translateY(-2px)}
+.nbtn.active .nlbl{color:var(--blue)}
+.nbtn.active .npip{width:20px}
+.rpl{position:absolute;border-radius:50%;background:rgba(255,255,255,.16);transform:scale(0);pointer-events:none;animation:rplOut .55s linear}
+@keyframes rplOut{to{transform:scale(5);opacity:0}}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--blue),var(--purple));border-radius:2px}
+
+/* LIGHT MODE */
+body.light{--bg:#f0f2ff;--bg-card:rgba(255,255,255,.75);--bg-ch:rgba(255,255,255,.92);--bdr:rgba(0,0,60,.1);--bdr-lit:rgba(30,90,255,.3);--blue:#2563eb;--purple:#7c3aed;--cyan:#0891b2;--text:#0f172a;--text2:rgba(15,23,42,.65);--text3:rgba(15,23,42,.38);}
+body.light{background:#f0f2ff}
+body.light .bg-orbs{background:radial-gradient(ellipse 85% 65% at 15% 8%,rgba(37,99,235,.08) 0%,transparent 55%),radial-gradient(ellipse 70% 55% at 88% 88%,rgba(124,58,237,.09) 0%,transparent 55%)}
+body.light .bg-grid{background-image:linear-gradient(rgba(37,99,235,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.04) 1px,transparent 1px);background-size:48px 48px}
+body.light .hdr{background:rgba(240,242,255,.92)}
+body.light .bnav{background:rgba(240,242,255,.96)}
+body.light #toast{background:rgba(240,242,255,.96)}
+body.light .bg-noise{opacity:.015}
+body.light .lang-select option{background:#f0f2ff;color:#0f172a}
+body,body *{transition:background-color .3s ease,border-color .3s ease,color .3s ease,box-shadow .3s ease}
+
+/* ═══ LANGUAGE SPLASH SCREEN ═══ */
+#langScreen{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse 120% 100% at 50% 0%,rgba(79,158,255,.12) 0%,transparent 60%),#07070f;padding:24px;overflow-y:auto;}
+.ls-logo{font-size:34px;font-weight:900;background:linear-gradient(95deg,var(--blue) 0%,var(--purple) 50%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(79,158,255,.5));margin-bottom:6px;letter-spacing:-1px}
+.ls-sub{font-size:11px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:32px}
+.ls-prompt{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:16px;letter-spacing:.3px;text-align:center}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:360px}
+.lang-tile{padding:13px 10px;background:var(--bg-card);border:1.5px solid var(--bdr);border-radius:var(--rm);cursor:pointer;text-align:center;transition:all .25s;animation:popIn .4s var(--spring) both;position:relative;overflow:hidden}
+.lang-tile:hover{border-color:var(--blue);background:rgba(79,158,255,.08);box-shadow:0 0 20px rgba(79,158,255,.15);transform:translateY(-3px)}
+.lang-tile:active{transform:scale(.95)}
+.lang-tile.selected{border-color:var(--cyan);background:rgba(0,212,170,.1);box-shadow:0 0 24px rgba(0,212,170,.2)}
+.lang-tile.selected::after{content:'✓';position:absolute;top:6px;right:8px;font-size:11px;color:var(--cyan);font-weight:800}
+.lt-flag{font-size:24px;margin-bottom:4px}
+.lt-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:1px}
+.lt-native{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.lang-proceed{margin-top:20px;width:100%;max-width:360px;padding:14px;background:linear-gradient(130deg,#1a5fff,#7c3aed);border:none;border-radius:var(--rm);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 24px rgba(30,80,255,.4);transition:all .3s;opacity:.35;pointer-events:none}
+.lang-proceed.ready{opacity:1;pointer-events:all}
+.lang-proceed.ready:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(30,80,255,.55)}
+.lang-proceed.ready:active{transform:scale(.97)}
+</style>
+</head>
+<body>
+
+<div class="bg bg-noise"></div>
+<div class="bg bg-orbs"></div>
+<div class="bg bg-grid"></div>
+
+<!-- ════════ LANGUAGE SPLASH ════════ -->
+<div id="langScreen">
+  <div class="ls-logo">✦ StyleCraft</div>
+  <div class="ls-sub">Premium Style Studio</div>
+  <div class="ls-prompt" id="lsPrompt">Choose your language / भाषा चुनें</div>
+  <div class="lang-grid" id="langGrid">
+    <div class="lang-tile" style="animation-delay:0ms"   data-lang="en"  onclick="selectLang('en')"><div class="lt-flag">🇬🇧</div><div class="lt-name">English</div><div class="lt-native">English</div></div>
+    <div class="lang-tile" style="animation-delay:50ms"  data-lang="hi"  onclick="selectLang('hi')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Hindi</div><div class="lt-native">हिन्दी</div></div>
+    <div class="lang-tile" style="animation-delay:100ms" data-lang="mr"  onclick="selectLang('mr')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Marathi</div><div class="lt-native">मराठी</div></div>
+    <div class="lang-tile" style="animation-delay:150ms" data-lang="bn"  onclick="selectLang('bn')"><div class="lt-flag">🇧🇩</div><div class="lt-name">Bengali</div><div class="lt-native">বাংলা</div></div>
+    <div class="lang-tile" style="animation-delay:200ms" data-lang="ta"  onclick="selectLang('ta')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Tamil</div><div class="lt-native">தமிழ்</div></div>
+    <div class="lang-tile" style="animation-delay:250ms" data-lang="te"  onclick="selectLang('te')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Telugu</div><div class="lt-native">తెలుగు</div></div>
+    <div class="lang-tile" style="animation-delay:300ms" data-lang="gu"  onclick="selectLang('gu')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Gujarati</div><div class="lt-native">ગુજરાતી</div></div>
+    <div class="lang-tile" style="animation-delay:350ms" data-lang="pa"  onclick="selectLang('pa')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Punjabi</div><div class="lt-native">ਪੰਜਾਬੀ</div></div>
+    <div class="lang-tile" style="animation-delay:400ms" data-lang="ur"  onclick="selectLang('ur')"><div class="lt-flag">🇵🇰</div><div class="lt-name">Urdu</div><div class="lt-native">اردو</div></div>
+    <div class="lang-tile" style="animation-delay:450ms" data-lang="kn"  onclick="selectLang('kn')"><div class="lt-flag">🇮🇳</div><div class="lt-name">Kannada</div><div class="lt-native">ಕನ್ನಡ</div></div>
+  </div>
+  <button class="lang-proceed" id="langProceedBtn" onclick="proceedWithLang()">Continue →</button>
+</div>
+
+<!-- ════════ MAIN APP ════════ -->
+<div id="app" style="display:none">
+  <header class="hdr">
+    <div class="hdr-inner">
+      <div>
+        <div class="logo">✦ StyleCraft</div>
+        <div class="logo-sub" id="hdrSub">Premium Style Studio</div>
+      </div>
+      <div class="hdr-right">
+        <select class="lang-select" id="langSwitcher" onchange="changeLang(this.value)">
+          <option value="en">🇬🇧 EN</option>
+          <option value="hi">🇮🇳 HI</option>
+          <option value="mr">🇮🇳 MR</option>
+          <option value="bn">🇧🇩 BN</option>
+          <option value="ta">🇮🇳 TA</option>
+          <option value="te">🇮🇳 TE</option>
+          <option value="gu">🇮🇳 GU</option>
+          <option value="pa">🇮🇳 PA</option>
+          <option value="ur">🇵🇰 UR</option>
+          <option value="kn">🇮🇳 KN</option>
+        </select>
+        <div class="icon-btn" id="sndBtn" onclick="toggleSound()">🔊</div>
+        <div class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SAFETY ALERT (home screen top) -->
+  <div class="alert-banner">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text" id="alertText">Alert: This app does NOT give money or rewards. Do NOT share OTP, bank details, or click on fake ads.</div>
+  </div>
+
+  <!-- SCREEN 1: NAMES -->
+  <div class="scr active" id="scr-name">
+    <div class="card">
+      <div class="sec-lbl" id="lbl-nameGen">Name Generator</div>
+      <div class="fld-lbl" id="lbl-yourName">Your Name</div>
+      <div class="ibox">
+        <input id="nameIn" type="text" maxlength="20" autocomplete="off" placeholder="Enter your name…"/>
+        <span class="ico">✦</span>
+      </div>
+      <button class="btn-gen" onclick="genNames()"><span>⚡</span><span id="btn-genNames">Generate Stylish Names</span></button>
+    </div>
+    <div class="loader" id="nldr"><div class="ring"></div><div class="dots"><span></span><span></span><span></span></div><div class="load-lbl" id="lbl-crafting">Crafting styles…</div></div>
+    <div class="shimmer-g" id="nshim"><div class="sh-card"></div><div class="sh-card"></div><div class="sh-card"></div><div class="sh-card"></div><div class="sh-card"></div><div class="sh-card"></div></div>
+    <div id="nres"></div>
+    <div id="trendSec" style="display:none">
+      <div class="trend-row"><span class="badge-hot" id="lbl-trending">🔥 Trending</span><span class="badge-sub" id="lbl-topPicks">Top picks</span></div>
+      <div class="names-grid" id="trendG"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: BIO -->
+  <div class="scr" id="scr-bio">
+    <div class="card">
+      <div class="sec-lbl" id="lbl-bioGen">Bio Generator</div>
+      <div class="pills">
+        <button class="pill active" id="catAttitude" onclick="selCat('attitude')">😎 <span id="lbl-attitude">Attitude</span></button>
+        <button class="pill" id="catSad" onclick="selCat('sad')">💔 <span id="lbl-sad">Sad</span></button>
+        <button class="pill" id="catMotivational" onclick="selCat('motivational')">🚀 <span id="lbl-boost">Boost</span></button>
+      </div>
+      <button class="btn-gen" onclick="genBio()"><span>✨</span><span id="btn-genBio">Generate Bio</span></button>
+    </div>
+    <div class="bio-box" id="bioBox"><div class="bio-ph" id="bio-ph">Tap Generate to craft your bio ✦</div></div>
+    <div class="bio-acts" id="bioActs" style="display:none">
+      <span class="bio-meta" id="bioMeta">— attitude</span>
+      <button class="btn-cbio" onclick="copyBio()">📋 <span id="btn-copyBio">Copy Bio</span></button>
+    </div>
+    <div class="card"><div class="sec-lbl" id="lbl-quickPicks">Quick Picks</div><div id="qbios"></div></div>
+  </div>
+
+  <!-- SCREEN 3: FANCY -->
+  <div class="scr" id="scr-fancy">
+    <div class="card">
+      <div class="sec-lbl" id="lbl-fancyConv">Fancy Text Converter</div>
+      <div class="fld-lbl" id="lbl-typeBelow">Type anything below</div>
+      <div class="ibox">
+        <input id="fancyIn" type="text" maxlength="30" oninput="convFancy()" autocomplete="off" placeholder="e.g. your name…"/>
+        <span class="ico">🔮</span>
+      </div>
+    </div>
+    <div id="fancyRes"><div class="empty"><div class="eico">🔮</div><p id="lbl-startTyping">Start typing — live preview ↑</p></div></div>
+  </div>
+
+  <!-- SCREEN 4: SYMBOLS -->
+  <div class="scr" id="scr-symbols">
+    <div class="card">
+      <div class="sec-lbl" id="lbl-symbolsSec">Symbols &amp; Decorators</div>
+      <p style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px" id="lbl-tapCopy">Tap any symbol to copy instantly ✦</p>
+    </div>
+    <div class="sym-grid" id="symG"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bnav">
+    <div class="nbtn active" onclick="switchTab('name',this)"><div class="nico">✦</div><div class="nlbl" id="nav-names">Names</div><div class="npip"></div></div>
+    <div class="nbtn" onclick="switchTab('bio',this)"><div class="nico">📝</div><div class="nlbl" id="nav-bio">Bio</div><div class="npip"></div></div>
+    <div class="nbtn" onclick="switchTab('fancy',this)"><div class="nico">🔮</div><div class="nlbl" id="nav-fancy">Fancy</div><div class="npip"></div></div>
+    <div class="nbtn" onclick="switchTab('symbols',this)"><div class="nico">❋</div><div class="nlbl" id="nav-symbols">Symbols</div><div class="npip"></div></div>
+  </nav>
+</div>
+
+<div id="toast">Copied ✅</div>
+
+<script>
+'use strict';
+
+/* ════════ TRANSLATIONS ════════ */
+const LANGS={
+  en:{hdrSub:'Premium Style Studio',alertText:'⚠️ Alert: This app does NOT give money or rewards. Do NOT share OTP, bank details, or click on fake ads.',nameGen:'Name Generator',yourName:'Your Name',nameIn:'Enter your name…',btnGenNames:'Generate Stylish Names',crafting:'Crafting styles…',trending:'🔥 Trending',topPicks:'Top picks',bioGen:'Bio Generator',attitude:'Attitude',sad:'Sad',boost:'Boost',btnGenBio:'Generate Bio',bioPh:'Tap Generate to craft your bio ✦',btnCopyBio:'Copy Bio',quickPicks:'Quick Picks',fancyConv:'Fancy Text Converter',typeBelow:'Type anything below',fancyIn:'e.g. your name…',startTyping:'Start typing — live preview ↑',symbolsSec:'Symbols & Decorators',tapCopy:'Tap any symbol to copy instantly ✦',navNames:'Names',navBio:'Bio',navFancy:'Fancy',navSymbols:'Symbols',copied:'Copied ✅',enterName:'Enter your name first ✦',langPrompt:'Choose your language',proceedBtn:'Continue →'},
+  hi:{hdrSub:'प्रीमियम स्टाइल स्टूडियो',alertText:'⚠️ चेतावनी: यह ऐप पैसे या इनाम नहीं देता। OTP, बैंक जानकारी साझा न करें और नकली विज्ञापनों पर क्लिक न करें।',nameGen:'नाम जेनरेटर',yourName:'आपका नाम',nameIn:'अपना नाम लिखें…',btnGenNames:'स्टाइलिश नाम बनाएं',crafting:'स्टाइल तैयार हो रही है…',trending:'🔥 ट्रेंडिंग',topPicks:'टॉप पिक्स',bioGen:'बायो जेनरेटर',attitude:'एटीट्यूड',sad:'दुख',boost:'प्रेरणा',btnGenBio:'बायो बनाएं',bioPh:'बायो बनाने के लिए Generate दबाएं ✦',btnCopyBio:'बायो कॉपी करें',quickPicks:'क्विक पिक्स',fancyConv:'फैंसी टेक्स्ट कन्वर्टर',typeBelow:'नीचे कुछ भी टाइप करें',fancyIn:'जैसे आपका नाम…',startTyping:'टाइप करना शुरू करें — लाइव प्रीव्यू ↑',symbolsSec:'सिंबल और डेकोरेटर',tapCopy:'कॉपी करने के लिए किसी भी सिंबल पर टैप करें ✦',navNames:'नाम',navBio:'बायो',navFancy:'फैंसी',navSymbols:'सिंबल',copied:'कॉपी हो गया ✅',enterName:'पहले अपना नाम लिखें ✦',langPrompt:'भाषा चुनें',proceedBtn:'आगे बढ़ें →'},
+  mr:{hdrSub:'प्रीमियम स्टाईल स्टुडिओ',alertText:'⚠️ सूचना: हे ॲप पैसे किंवा बक्षीस देत नाही। OTP, बँक माहिती शेअर करू नका आणि बनावट जाहिरातींवर क्लिक करू नका।',nameGen:'नाव जनरेटर',yourName:'तुमचे नाव',nameIn:'तुमचे नाव लिहा…',btnGenNames:'स्टायलिश नावे बनवा',crafting:'स्टाईल तयार होत आहे…',trending:'🔥 ट्रेंडिंग',topPicks:'टॉप पिक्स',bioGen:'बायो जनरेटर',attitude:'एटीट्यूड',sad:'दुःख',boost:'प्रेरणा',btnGenBio:'बायो बनवा',bioPh:'बायो बनवण्यासाठी Generate दाबा ✦',btnCopyBio:'बायो कॉपी करा',quickPicks:'क्विक पिक्स',fancyConv:'फॅन्सी टेक्स्ट कन्व्हर्टर',typeBelow:'खाली काहीही टाईप करा',fancyIn:'उदा. तुमचे नाव…',startTyping:'टाईप करणे सुरू करा — लाइव्ह प्रीव्ह्यू ↑',symbolsSec:'सिम्बॉल आणि डेकोरेटर',tapCopy:'कॉपी करण्यासाठी कोणत्याही सिम्बॉलवर टॅप करा ✦',navNames:'नावे',navBio:'बायो',navFancy:'फॅन्सी',navSymbols:'सिम्बॉल',copied:'कॉपी झाले ✅',enterName:'प्रथम तुमचे नाव लिहा ✦',langPrompt:'भाषा निवडा',proceedBtn:'पुढे जा →'},
+  bn:{hdrSub:'প্রিমিয়াম স্টাইল স্টুডিও',alertText:'⚠️ সতর্কতা: এই অ্যাপ টাকা বা পুরস্কার দেয় না। OTP, ব্যাংক তথ্য শেয়ার করবেন না এবং ভুয়া বিজ্ঞাপনে ক্লিক করবেন না।',nameGen:'নাম জেনারেটর',yourName:'আপনার নাম',nameIn:'আপনার নাম লিখুন…',btnGenNames:'স্টাইলিশ নাম তৈরি করুন',crafting:'স্টাইল তৈরি হচ্ছে…',trending:'🔥 ট্রেন্ডিং',topPicks:'টপ পিক্স',bioGen:'বায়ো জেনারেটর',attitude:'মনোভাব',sad:'দুঃখ',boost:'অনুপ্রেরণা',btnGenBio:'বায়ো তৈরি করুন',bioPh:'বায়ো তৈরি করতে Generate চাপুন ✦',btnCopyBio:'বায়ো কপি করুন',quickPicks:'কুইক পিক্স',fancyConv:'ফ্যান্সি টেক্সট কনভার্টার',typeBelow:'নিচে যা খুশি টাইপ করুন',fancyIn:'যেমন আপনার নাম…',startTyping:'টাইপ শুরু করুন — লাইভ প্রিভিউ ↑',symbolsSec:'সিম্বল ও ডেকোরেটর',tapCopy:'কপি করতে যেকোনো সিম্বলে ট্যাপ করুন ✦',navNames:'নাম',navBio:'বায়ো',navFancy:'ফ্যান্সি',navSymbols:'সিম্বল',copied:'কপি হয়েছে ✅',enterName:'আগে আপনার নাম লিখুন ✦',langPrompt:'ভাষা বেছে নিন',proceedBtn:'এগিয়ে যান →'},
+  ta:{hdrSub:'பிரீமியம் ஸ்டைல் ஸ்டூடியோ',alertText:'⚠️ எச்சரிக்கை: இந்த ஆப் பணம் அல்லது பரிசு தருவதில்லை. OTP, வங்கி விவரங்களை பகிர வேண்டாம். போலி விளம்பரங்களை கிளிக் செய்யாதீர்கள்.',nameGen:'பெயர் ஜெனரேட்டர்',yourName:'உங்கள் பெயர்',nameIn:'உங்கள் பெயரை உள்ளிடவும்…',btnGenNames:'ஸ்டைலிஷ் பெயர்கள் உருவாக்கு',crafting:'ஸ்டைல்கள் உருவாகின்றன…',trending:'🔥 டிரெண்டிங்',topPicks:'டாப் பிக்ஸ்',bioGen:'பயோ ஜெனரேட்டர்',attitude:'மனோபாவம்',sad:'சோகம்',boost:'உத்வேகம்',btnGenBio:'பயோ உருவாக்கு',bioPh:'பயோ உருவாக்க Generate அழுத்தவும் ✦',btnCopyBio:'பயோ நகலெடு',quickPicks:'விரைவு பிக்ஸ்',fancyConv:'ஃபேன்ஸி டெக்ஸ்ட் மாற்றி',typeBelow:'கீழே எதையும் தட்டச்சு செய்யுங்கள்',fancyIn:'எ.கா. உங்கள் பெயர்…',startTyping:'தட்டச்சு தொடங்குங்கள் — நேரடி முன்னோட்டம் ↑',symbolsSec:'சின்னங்கள் & டெக்கரேட்டர்கள்',tapCopy:'நகலெடுக்க எந்த சின்னத்திலும் தட்டவும் ✦',navNames:'பெயர்கள்',navBio:'பயோ',navFancy:'ஃபேன்ஸி',navSymbols:'சின்னங்கள்',copied:'நகலெடுக்கப்பட்டது ✅',enterName:'முதலில் உங்கள் பெயரை உள்ளிடவும் ✦',langPrompt:'மொழியை தேர்ந்தெடுக்கவும்',proceedBtn:'தொடரவும் →'},
+  te:{hdrSub:'ప్రీమియం స్టైల్ స్టూడియో',alertText:'⚠️ హెచ్చరిక: ఈ యాప్ డబ్బు లేదా బహుమతులు ఇవ్వదు. OTP, బ్యాంక్ వివరాలు షేర్ చేయవద్దు. నకిలీ ప్రకటనలపై క్లిక్ చేయవద్దు.',nameGen:'పేరు జనరేటర్',yourName:'మీ పేరు',nameIn:'మీ పేరు నమోదు చేయండి…',btnGenNames:'స్టైలిష్ పేర్లు రూపొందించు',crafting:'స్టైల్స్ రూపొందుతున్నాయి…',trending:'🔥 ట్రెండింగ్',topPicks:'టాప్ పిక్స్',bioGen:'బయో జనరేటర్',attitude:'వైఖరి',sad:'దుఃఖం',boost:'స్ఫూర్తి',btnGenBio:'బయో రూపొందించు',bioPh:'బయో రూపొందించడానికి Generate నొక్కండి ✦',btnCopyBio:'బయో కాపీ చేయి',quickPicks:'క్విక్ పిక్స్',fancyConv:'ఫేన్సీ టెక్స్ట్ కన్వర్టర్',typeBelow:'దిగువన ఏదైనా టైప్ చేయండి',fancyIn:'ఉదా. మీ పేరు…',startTyping:'టైప్ చేయడం ప్రారంభించండి — లైవ్ ప్రివ్యూ ↑',symbolsSec:'సింబల్స్ & డెకొరేటర్స్',tapCopy:'కాపీ చేయడానికి ఏదైనా సింబల్ నొక్కండి ✦',navNames:'పేర్లు',navBio:'బయో',navFancy:'ఫేన్సీ',navSymbols:'సింబల్స్',copied:'కాపీ అయింది ✅',enterName:'ముందు మీ పేరు నమోదు చేయండి ✦',langPrompt:'భాషను ఎంచుకోండి',proceedBtn:'కొనసాగించు →'},
+  gu:{hdrSub:'પ્રીમિયમ સ્ટાઇલ સ્ટૂડિઓ',alertText:'⚠️ ચેતવણી: આ ઍપ પૈસા અથવા ઇનામ આપતી નથી. OTP, બૅન્ક વિગતો શૅર ન કરો અને નકલી જાહેરાતો પર ક્લિક ન કરો.',nameGen:'નામ જનરેટર',yourName:'તમારું નામ',nameIn:'તમારું નામ દાખલ કરો…',btnGenNames:'સ્ટાઇલિશ નામ બનાવો',crafting:'સ્ટાઇલ બનાવવામાં આવી રહ્યા છે…',trending:'🔥 ટ્રેન્ડિંગ',topPicks:'ટૉપ પિક્સ',bioGen:'બાયો જનરેટર',attitude:'વલણ',sad:'ઉદાસી',boost:'પ્રેરણા',btnGenBio:'બાયો બનાવો',bioPh:'બાયો બનાવવા Generate દબાવો ✦',btnCopyBio:'બાયો કૉપિ કરો',quickPicks:'ક્વિક પિક્સ',fancyConv:'ફૅન્સી ટેક્સ્ટ કન્વર્ટર',typeBelow:'નીચે ગમે તે ટાઇપ કરો',fancyIn:'ઉદા. તમારું નામ…',startTyping:'ટાઇપ કરવાનું શરૂ કરો — લાઇવ પ્રિવ્યૂ ↑',symbolsSec:'સિમ્બૉલ અને ડૅકોરેટર',tapCopy:'કૉપિ કરવા કોઈ પણ સિમ્બૉલ પર ટૅપ કરો ✦',navNames:'નામ',navBio:'બાયો',navFancy:'ફૅન્સી',navSymbols:'સિમ્બૉલ',copied:'કૉપિ થઈ ✅',enterName:'પહેલા તમારું નામ દાખલ કરો ✦',langPrompt:'ભાષા પસંદ કરો',proceedBtn:'આગળ વધો →'},
+  pa:{hdrSub:'ਪ੍ਰੀਮੀਅਮ ਸਟਾਈਲ ਸਟੂਡੀਓ',alertText:'⚠️ ਚੇਤਾਵਨੀ: ਇਹ ਐਪ ਪੈਸੇ ਜਾਂ ਇਨਾਮ ਨਹੀਂ ਦਿੰਦੀ। OTP, ਬੈਂਕ ਵੇਰਵੇ ਸਾਂਝੇ ਨਾ ਕਰੋ ਅਤੇ ਝੂਠੇ ਇਸ਼ਤਿਹਾਰਾਂ ਤੇ ਕਲਿੱਕ ਨਾ ਕਰੋ।',nameGen:'ਨਾਮ ਜਨਰੇਟਰ',yourName:'ਤੁਹਾਡਾ ਨਾਮ',nameIn:'ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ…',btnGenNames:'ਸਟਾਈਲਿਸ਼ ਨਾਮ ਬਣਾਓ',crafting:'ਸਟਾਈਲ ਬਣਾਏ ਜਾ ਰਹੇ ਹਨ…',trending:'🔥 ਟ੍ਰੈਂਡਿੰਗ',topPicks:'ਟੌਪ ਪਿਕਸ',bioGen:'ਬਾਇਓ ਜਨਰੇਟਰ',attitude:'ਰਵੱਈਆ',sad:'ਉਦਾਸੀ',boost:'ਪ੍ਰੇਰਣਾ',btnGenBio:'ਬਾਇਓ ਬਣਾਓ',bioPh:'ਬਾਇਓ ਬਣਾਉਣ ਲਈ Generate ਦਬਾਓ ✦',btnCopyBio:'ਬਾਇਓ ਕਾਪੀ ਕਰੋ',quickPicks:'ਕੁਇੱਕ ਪਿਕਸ',fancyConv:'ਫੈਂਸੀ ਟੈਕਸਟ ਕਨਵਰਟਰ',typeBelow:'ਹੇਠਾਂ ਕੁਝ ਵੀ ਟਾਈਪ ਕਰੋ',fancyIn:'ਜਿਵੇਂ ਤੁਹਾਡਾ ਨਾਮ…',startTyping:'ਟਾਈਪ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰੋ — ਲਾਈਵ ਪ੍ਰੀਵਿਊ ↑',symbolsSec:'ਸਿੰਬਲ ਅਤੇ ਡੇਕੋਰੇਟਰ',tapCopy:'ਕਾਪੀ ਕਰਨ ਲਈ ਕਿਸੇ ਵੀ ਸਿੰਬਲ ਤੇ ਟੈਪ ਕਰੋ ✦',navNames:'ਨਾਮ',navBio:'ਬਾਇਓ',navFancy:'ਫੈਂਸੀ',navSymbols:'ਸਿੰਬਲ',copied:'ਕਾਪੀ ਹੋ ਗਿਆ ✅',enterName:'ਪਹਿਲਾਂ ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ ✦',langPrompt:'ਭਾਸ਼ਾ ਚੁਣੋ',proceedBtn:'ਅੱਗੇ ਵਧੋ →'},
+  ur:{hdrSub:'پریمیم اسٹائل اسٹوڈیو',alertText:'⚠️ خبردار: یہ ایپ پیسے یا انعام نہیں دیتی۔ OTP، بینک کی تفصیلات شیئر نہ کریں اور جھوٹے اشتہارات پر کلک نہ کریں۔',nameGen:'نام جنریٹر',yourName:'آپ کا نام',nameIn:'اپنا نام درج کریں…',btnGenNames:'اسٹائلش نام بنائیں',crafting:'اسٹائل تیار ہو رہے ہیں…',trending:'🔥 ٹرینڈنگ',topPicks:'ٹاپ پکس',bioGen:'بائیو جنریٹر',attitude:'رویہ',sad:'اداسی',boost:'حوصلہ',btnGenBio:'بائیو بنائیں',bioPh:'بائیو بنانے کے لیے Generate دبائیں ✦',btnCopyBio:'بائیو کاپی کریں',quickPicks:'کوئک پکس',fancyConv:'فینسی ٹیکسٹ کنورٹر',typeBelow:'نیچے کچھ بھی ٹائپ کریں',fancyIn:'مثلاً آپ کا نام…',startTyping:'ٹائپ کرنا شروع کریں — لائیو پریویو ↑',symbolsSec:'علامات اور ڈیکوریٹر',tapCopy:'کاپی کرنے کے لیے کسی بھی علامت پر ٹیپ کریں ✦',navNames:'نام',navBio:'بائیو',navFancy:'فینسی',navSymbols:'علامات',copied:'کاپی ہو گیا ✅',enterName:'پہلے اپنا نام درج کریں ✦',langPrompt:'زبان منتخب کریں',proceedBtn:'آگے بڑھیں →'},
+  kn:{hdrSub:'ಪ್ರೀಮಿಯಂ ಸ್ಟೈಲ್ ಸ್ಟುಡಿಯೋ',alertText:'⚠️ ಎಚ್ಚರಿಕೆ: ಈ ಆ್ಯಪ್ ಹಣ ಅಥವಾ ಬಹುಮಾನ ನೀಡುವುದಿಲ್ಲ. OTP, ಬ್ಯಾಂಕ್ ವಿವರಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಬೇಡಿ. ನಕಲಿ ಜಾಹೀರಾತುಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಬೇಡಿ.',nameGen:'ಹೆಸರು ಜನರೇಟರ್',yourName:'ನಿಮ್ಮ ಹೆಸರು',nameIn:'ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ…',btnGenNames:'ಸ್ಟೈಲಿಷ್ ಹೆಸರುಗಳನ್ನು ರಚಿಸಿ',crafting:'ಸ್ಟೈಲ್‌ಗಳನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ…',trending:'🔥 ಟ್ರೆಂಡಿಂಗ್',topPicks:'ಟಾಪ್ ಪಿಕ್ಸ್',bioGen:'ಬಯೋ ಜನರೇಟರ್',attitude:'ಮನೋಭಾವ',sad:'ದುಃಖ',boost:'ಪ್ರೇರಣೆ',btnGenBio:'ಬಯೋ ರಚಿಸಿ',bioPh:'ಬಯೋ ರಚಿಸಲು Generate ಒತ್ತಿ ✦',btnCopyBio:'ಬಯೋ ಕಾಪಿ ಮಾಡಿ',quickPicks:'ಕ್ವಿಕ್ ಪಿಕ್ಸ್',fancyConv:'ಫ್ಯಾನ್ಸಿ ಟೆಕ್ಸ್ಟ್ ಕನ್ವರ್ಟರ್',typeBelow:'ಕೆಳಗೆ ಏನಾದರೂ ಟೈಪ್ ಮಾಡಿ',fancyIn:'ಉದಾ. ನಿಮ್ಮ ಹೆಸರು…',startTyping:'ಟೈಪ್ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿ — ಲೈವ್ ಪ್ರಿವ್ಯೂ ↑',symbolsSec:'ಸಂಕೇತಗಳು & ಡೆಕೊರೇಟರ್‌ಗಳು',tapCopy:'ಕಾಪಿ ಮಾಡಲು ಯಾವುದಾದರೂ ಸಂಕೇತವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ ✦',navNames:'ಹೆಸರುಗಳು',navBio:'ಬಯೋ',navFancy:'ಫ್ಯಾನ್ಸಿ',navSymbols:'ಸಂಕೇತಗಳು',copied:'ಕಾಪಿ ಆಯಿತು ✅',enterName:'ಮೊದಲು ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ ✦',langPrompt:'ಭಾಷೆ ಆಯ್ಕೆ ಮಾಡಿ',proceedBtn:'ಮುಂದುವರಿಯಿರಿ →'}
+};
+
+let currentLang='en';
+function T(k){return(LANGS[currentLang]&&LANGS[currentLang][k])||LANGS.en[k]||k;}
+
+function applyLang(lang){
+  currentLang=lang;
+  document.getElementById('langSwitcher').value=lang;
+  document.getElementById('hdrSub').textContent=T('hdrSub');
+  document.getElementById('alertText').textContent=T('alertText');
+  document.getElementById('nameIn').placeholder=T('nameIn');
+  document.getElementById('fancyIn').placeholder=T('fancyIn');
+  setText('lbl-nameGen',T('nameGen'));
+  setText('lbl-yourName',T('yourName'));
+  setText('btn-genNames',T('btnGenNames'));
+  setText('lbl-crafting',T('crafting'));
+  setText('lbl-trending',T('trending'));
+  setText('lbl-topPicks',T('topPicks'));
+  setText('lbl-bioGen',T('bioGen'));
+  setText('lbl-attitude',T('attitude'));
+  setText('lbl-sad',T('sad'));
+  setText('lbl-boost',T('boost'));
+  setText('btn-genBio',T('btnGenBio'));
+  setText('bio-ph',T('bioPh'));
+  setText('btn-copyBio',T('btnCopyBio'));
+  setText('lbl-quickPicks',T('quickPicks'));
+  setText('lbl-fancyConv',T('fancyConv'));
+  setText('lbl-typeBelow',T('typeBelow'));
+  setText('lbl-startTyping',T('startTyping'));
+  setText('lbl-symbolsSec',T('symbolsSec'));
+  setText('lbl-tapCopy',T('tapCopy'));
+  setText('nav-names',T('navNames'));
+  setText('nav-bio',T('navBio'));
+  setText('nav-fancy',T('navFancy'));
+  setText('nav-symbols',T('navSymbols'));
+  document.getElementById('langProceedBtn').textContent=T('proceedBtn');
+  document.getElementById('lsPrompt').textContent=T('langPrompt');
+  document.body.setAttribute('dir',lang==='ur'?'rtl':'ltr');
+  try{localStorage.setItem('sc_lang',lang);}catch(e){}
+}
+
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+
+/* LANGUAGE SPLASH */
+let splashLang='';
+function selectLang(lang){
+  splashLang=lang;
+  document.querySelectorAll('.lang-tile').forEach(t=>t.classList.remove('selected'));
+  const tile=document.querySelector(`.lang-tile[data-lang="${lang}"]`);
+  if(tile)tile.classList.add('selected');
+  document.getElementById('langProceedBtn').classList.add('ready');
+  playTap();
+  // Update proceed button text in selected language
+  document.getElementById('langProceedBtn').textContent=LANGS[lang]?LANGS[lang].proceedBtn:'Continue →';
+}
+
+function proceedWithLang(){
+  if(!splashLang)return;
+  playGenerate();
+  const splash=document.getElementById('langScreen');
+  splash.style.transition='opacity .4s ease,transform .4s ease';
+  splash.style.opacity='0';
+  splash.style.transform='scale(1.04)';
+  setTimeout(()=>{
+    splash.style.display='none';
+    const appEl=document.getElementById('app');
+    appEl.style.display='block';
+    appEl.style.opacity='0';
+    appEl.style.transition='opacity .4s ease';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>appEl.style.opacity='1'));
+    applyLang(splashLang);
+    renderQBios();
+  },380);
+}
+
+function changeLang(lang){
+  applyLang(lang);
+  document.getElementById('qbios').innerHTML='';
+  renderQBios();
+  playTap();
+}
+
+/* SOUND ENGINE */
+let AC=null,sndOn=true;
+function getAC(){if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}if(AC&&AC.state==='suspended')AC.resume();return AC;}
+function playTap(){if(!sndOn)return;const c=getAC();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(900,c.currentTime);o.frequency.exponentialRampToValueAtTime(660,c.currentTime+.09);g.gain.setValueAtTime(.16,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);o.start();o.stop(c.currentTime+.11);}
+function playGenerate(){if(!sndOn)return;const c=getAC();if(!c)return;[0,.07,.14].forEach((d,i)=>{const o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=2000;o.connect(f);f.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(180+i*70,c.currentTime+d);o.frequency.exponentialRampToValueAtTime(800+i*200,c.currentTime+d+.24);g.gain.setValueAtTime(0,c.currentTime+d);g.gain.linearRampToValueAtTime(.1,c.currentTime+d+.04);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d+.27);o.start(c.currentTime+d);o.stop(c.currentTime+d+.3);});}
+function playCopy(){if(!sndOn)return;const c=getAC();if(!c)return;[523.25,659.25,783.99].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='triangle';o.frequency.value=f;const t=c.currentTime+i*.09;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.22,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.start(t);o.stop(t+.35);});}
+function playTab(){if(!sndOn)return;const c=getAC();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(430,c.currentTime);o.frequency.exponentialRampToValueAtTime(560,c.currentTime+.07);g.gain.setValueAtTime(.13,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);o.start();o.stop(c.currentTime+.11);}
+function playError(){if(!sndOn)return;const c=getAC();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.setValueAtTime(190,c.currentTime);o.frequency.exponentialRampToValueAtTime(110,c.currentTime+.18);g.gain.setValueAtTime(.09,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.start();o.stop(c.currentTime+.22);}
+function toggleSound(){sndOn=!sndOn;document.getElementById('sndBtn').textContent=sndOn?'🔊':'🔇';if(sndOn)playTap();}
+
+/* THEME */
+function toggleTheme(){const l=document.body.classList.toggle('light');document.getElementById('themeBtn').textContent=l?'☀️':'🌙';document.querySelector('meta[name="theme-color"]').content=l?'#f0f2ff':'#07070f';playTap();try{localStorage.setItem('sc_theme',l?'light':'dark');}catch(e){}}
+(function(){try{if(localStorage.getItem('sc_theme')==='light'){document.body.classList.add('light');const b=document.getElementById('themeBtn');if(b)b.textContent='☀️';}}catch(e){}})();
+
+/* RIPPLE */
+document.addEventListener('pointerdown',e=>{
+  const el=e.target.closest('.btn-gen,.pill,.btn-cbio,.chip,.nbtn,.name-card,.sym-cell,.fancy-row,.row-res,.lang-tile,.lang-proceed');
+  if(!el)return;
+  const r=document.createElement('span');r.className='rpl';
+  const rc=el.getBoundingClientRect(),sz=Math.max(rc.width,rc.height)*1.4;
+  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rc.left-sz/2}px;top:${e.clientY-rc.top-sz/2}px`;
+  el.appendChild(r);setTimeout(()=>r.remove(),600);
+});
+
+/* TABS */
+function switchTab(name,el){playTab();document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nbtn').forEach(n=>n.classList.remove('active'));document.getElementById('scr-'+name).classList.add('active');el.classList.add('active');if(name==='symbols')renderSyms();if(name==='bio')renderQBios();}
+
+/* TOAST */
+let _tt;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg||T('copied');t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2000);}
+
+/* COPY */
+async function copyText(text,chipEl){
+  try{await navigator.clipboard.writeText(text);}
+  catch{const ta=document.createElement('textarea');ta.value=text;Object.assign(ta.style,{position:'fixed',opacity:'0'});document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  playCopy();toast(T('copied'));
+  if(chipEl){chipEl.textContent='✓';setTimeout(()=>chipEl.textContent='COPY',1500);}
+}
+
+/* UNICODE DATA */
+const ABC='abcdefghijklmnopqrstuvwxyz';
+const US={bold:[...'𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇'],italic:[...'𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻'],bi:[...'𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯'],scr:[...'𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏'],bscr:[...'𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃'],frak:[...'𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷'],bfrak:[...'𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟'],dbl:[...'𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫'],mono:[...'𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣'],sans:[...'𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓']};
+const CAPS={a:'ᴬ',b:'ᴮ',c:'ᶜ',d:'ᴰ',e:'ᴱ',f:'ᶠ',g:'ᴳ',h:'ᴴ',i:'ᴵ',j:'ᴶ',k:'ᴷ',l:'ᴸ',m:'ᴹ',n:'ᴺ',o:'ᴼ',p:'ᴾ',q:'ᵠ',r:'ᴿ',s:'ˢ',t:'ᵀ',u:'ᵁ',v:'ᵛ',w:'ᵂ',x:'ˣ',y:'ʸ',z:'ᶻ'};
+const SMALL={a:'ᵃ',b:'ᵇ',c:'ᶜ',d:'ᵈ',e:'ᵉ',f:'ᶠ',g:'ᵍ',h:'ʰ',i:'ⁱ',j:'ʲ',k:'ᵏ',l:'ˡ',m:'ᵐ',n:'ⁿ',o:'ᵒ',p:'ᵖ',q:'ᵠ',r:'ʳ',s:'ˢ',t:'ᵗ',u:'ᵘ',v:'ᵛ',w:'ʷ',x:'ˣ',y:'ʸ',z:'ᶻ'};
+const FLIP={a:'ɐ',b:'q',c:'ɔ',d:'p',e:'ǝ',f:'ɟ',g:'ƃ',h:'ɥ',i:'ᴉ',j:'ɾ',k:'ʞ',l:'l',m:'ɯ',n:'u',o:'o',p:'d',r:'ɹ',s:'s',t:'ʇ',u:'n',v:'ʌ',w:'ʍ',x:'x',y:'ʎ',z:'z'};
+const BBLE={a:'ⓐ',b:'ⓑ',c:'ⓒ',d:'ⓓ',e:'ⓔ',f:'ⓕ',g:'ⓖ',h:'ⓗ',i:'ⓘ',j:'ⓙ',k:'ⓚ',l:'ⓛ',m:'ⓜ',n:'ⓝ',o:'ⓞ',p:'ⓟ',q:'ⓠ',r:'ⓡ',s:'ⓢ',t:'ⓣ',u:'ⓤ',v:'ⓥ',w:'ⓦ',x:'ⓧ',y:'ⓨ',z:'ⓩ'};
+const SQB={a:'🄰',b:'🄱',c:'🄲',d:'🄳',e:'🄴',f:'🄵',g:'🄶',h:'🄷',i:'🄸',j:'🄹',k:'🄺',l:'🄻',m:'🄼',n:'🄽',o:'🄾',p:'🄿',q:'🅀',r:'🅁',s:'🅂',t:'🅃',u:'🅄',v:'🅅',w:'🅆',x:'🅇',y:'🅈',z:'🅉'};
+const DECOS=[['꧁','꧂'],['『','』'],['【','】'],['✦','✦'],['❝','❞'],['⟦','⟧'],['☆','☆'],['░','░'],['★彡','彡★'],['⚡','⚡'],['◈','◈'],['∞','∞'],['꩜','꩜'],['༺','༻'],['⎨','⎬']];
+const SEPS=['·','•','★','❋','✦','⟡','◈','∞','▸','✿'];
+const SUFX=['ツ','シ','乂','亗','彡','ᴮᴱ','ᴳᴼᴰ','ᴿᴼᴼᴷ','乃ᴬᴰ','ᴷᴵᴺᴳ'];
+const cw=(t,s)=>t.toLowerCase().split('').map(c=>{const i=ABC.indexOf(c);return i>=0?s[i]:c;}).join('');
+const cm=(t,m)=>t.toLowerCase().split('').map(c=>m[c]||c).join('');
+
+/* NAME GENERATOR */
+function buildVars(name){
+  const n=name.trim(),nl=n.toLowerCase(),v=[];
+  Object.values(US).forEach(s=>v.push(cw(n,s)));
+  Object.values(US).slice(0,6).forEach(s=>DECOS.slice(0,8).forEach(d=>v.push(`${d[0]}${cw(n,s)}${d[1]}`)));
+  v.push(cm(nl,CAPS),cm(nl,SMALL));
+  v.push([...n.toUpperCase()].join(' '),[...n.toUpperCase()].join(' ✦ '),[...n.toUpperCase()].join(' · '),[...n.toUpperCase()].join(' ★ '));
+  v.push(cm(nl,FLIP),cm(nl,BBLE),cm(nl,SQB));
+  DECOS.forEach(d=>{v.push(`${d[0]}${n}${d[1]}`);v.push(`${d[0]} ${n.toUpperCase()} ${d[1]}`);});
+  SUFX.forEach(s=>{v.push(`${n} ${s}`);v.push(`${cw(n,US.bold)} ${s}`);v.push(`${cw(n,US.scr)} ${s}`);});
+  if(n.includes(' ')){const p=n.split(' ');SEPS.forEach(sep=>{v.push(p.map(x=>cw(x,US.bold)).join(` ${sep} `));v.push(p.map(x=>x.toUpperCase()).join(` ${sep} `));});}
+  v.push(n.split('').map((c,i)=>i%2?c.toLowerCase():c.toUpperCase()).join(''));
+  v.push(cw(n,US.dbl)+' ✦','✦ '+cw(n,US.bfrak)+' ✦','⚡'+cw(n,US.bscr)+'⚡','★ '+cw(n,US.italic).toUpperCase()+' ★');
+  v.push('꧁༺ '+n.toUpperCase()+' ༻꧂','꧁✦ '+cw(n,US.bold)+' ✦꧂','『'+cw(n,US.frak)+'』','⟦ '+cw(n,US.mono)+' ⟧','彡 '+cw(n,US.italic)+' 彡');
+  return [...new Set(v)].filter(x=>x.trim()).slice(0,82);
+}
+function mkCard(text,delay){
+  const card=document.createElement('div');card.className='name-card';card.style.animationDelay=delay+'ms';
+  const txt=document.createElement('div');txt.className='name-txt';txt.textContent=text;
+  const chip=document.createElement('button');chip.className='chip';chip.textContent='COPY';
+  chip.onclick=e=>{e.stopPropagation();copyText(text,chip);};
+  card.appendChild(txt);card.appendChild(chip);card.onclick=()=>copyText(text,null);
+  return card;
+}
+function genNames(){
+  playGenerate();
+  const name=document.getElementById('nameIn').value.trim();
+  if(!name){playError();toast(T('enterName'));return;}
+  const resEl=document.getElementById('nres'),ldr=document.getElementById('nldr'),shm=document.getElementById('nshim'),trendSec=document.getElementById('trendSec');
+  resEl.innerHTML='';trendSec.style.display='none';
+  ldr.classList.add('on');shm.classList.add('on');
+  setTimeout(()=>{
+    ldr.classList.remove('on');shm.classList.remove('on');
+    const vars=buildVars(name);
+    const frag=document.createDocumentFragment();
+    const ct=document.createElement('div');ct.className='res-count';ct.innerHTML=`<b>${vars.length}</b> variations`;
+    frag.appendChild(ct);
+    const grid=document.createElement('div');grid.className='names-grid';
+    vars.forEach((v,i)=>grid.appendChild(mkCard(v,Math.min(i*22,650))));
+    frag.appendChild(grid);resEl.appendChild(frag);
+    const tG=document.getElementById('trendG');tG.innerHTML='';
+    [...vars].sort(()=>Math.random()-.5).slice(0,8).forEach((v,i)=>tG.appendChild(mkCard(v,i*40)));
+    trendSec.style.display='block';
+  },680+Math.random()*420);
+}
+document.getElementById('nameIn').addEventListener('keydown',e=>{if(e.key==='Enter')genNames();});
+
+/* BIO DATA */
+const BIOS={
+  attitude:["I'm not rude. I just say what others are afraid to think. 😤","My attitude mirrors your actions. Don't like it? Check yourself. 🔥","Too glam to give a damn. ✦","I don't have attitude problems. You have perception issues. 💯","I walk like I own the floor. Because I earned it. 😎","Not everyone likes me, but not everyone matters. ❄️","Born to express. Never to impress. 💫","My circle is small — quality over quantity, always. 💎","I'm the vibe you can't Google. 🌐","I don't follow crowds. I pave my own path. 🛤️","Silence is my loudest reply. 🌑","Some call it arrogance. I call it earned confidence. 👑","My vibe speaks louder than words ever will. 💀","I don't compete. I inspire. Big difference. 🌟","Classy with a wild side. ⚡","They said I couldn't. That's why I did. 🏆","Laser-focused on my lane. No interest in yours. 🛣️","Slay every day. No permission needed. 💅","I wear my flaws like jewels. 💎","Be you. The world will figure out the rest. 🌍","Not your cup of tea? I'm someone's whiskey. 🥃","My energy is my currency. I spend it wisely. ⚡","Rare vibes. Limited access. ✦","Real recognizes real. Do you qualify? 🪞","I have standards. Sorry you don't meet them. 🚫","Do what's right. Not what's easy. 🔥","I'm not rising to your expectations. I've already surpassed them. 🔑","You triggered my attitude. I just activated it. ⚡","I'm the storm you completely underestimated. 🌪️","My reputation speaks before I arrive. 👑","Underestimate me. I love proving people wrong. 😎","My mood changes. My standards never do. ☁️"],
+  sad:["Smiling outside. Breaking inside. Nobody thought to ask why. 💔","Some wounds don't bleed, yet they hurt most of all. 🌑","Tired of fighting invisible battles alone. 🕯️","They left without saying goodbye. I wave to no one now. 😶","The saddest thing is loving someone who once loved you back. 🥀","The loudest cries are the ones never heard. 🌧️","I smile so you won't worry. That burden is mine alone. 😞","Behind this smile hides a thousand quiet tears. 💧","Feeling everything and nothing at the exact same time. 🌌","I miss the version of me that hadn't met you yet. 🥀","Loneliness isn't absent people — it's absent understanding. 💔","I pretend I'm fine so I don't ruin your day. 🌑","Sometimes silence is the only honest thing left to say. 🌙","I water other people's gardens and let mine run dry. 🥀","The saddest goodbyes are the ones left unspoken. 💔","Even my shadow leaves me at the end of the day. 🌑","I was happiest the moment I stopped expecting. 😶","Some nights are deafening even in complete silence. 🌧️","I collect memories of you because that's all I have left. 📷","The emptiness inside me is shaped exactly like you. 🌑","People come. People go. The ache always stays. 🥀","My smile is my mask. My heart is the stage. 🎭","Healing isn't linear. Some days I'm still falling. 💧","You'll understand my silence when you feel what I feel. 🌫️","I gave everything. You returned only lessons. 📖","The hardest part is acting okay while quietly breaking. 💔","Tired of being strong. Can someone hold me for once? 🌧️","The pain isn't that you left — it's how easily you let go. 🥀","Not every story gets a happy ending. This is mine. 🌑","Numb isn't healed. It's just quieter. 🌑","I tried. That has to count for something. Doesn't it? 💧","Broken things can still be beautiful. That's me. 🌌"],
+  motivational:["Every setback is a setup for a greater comeback. 🚀","I didn't come this far to only come this far. 🔥","Work in silence. Let success make the noise. 💪","Discipline is choosing your future self over your present comfort. 🎯","The grind never stops. Only the results evolve. ⚡","My only competition is who I was yesterday. 🌟","Hard times build hard minds. I've been built right. 🏋️","Dream it. Plan it. Execute it. Build your legacy. 🌍","Pressure is a privilege. Diamonds form under it. 💎","Stop waiting for the right moment. Create it now. 🔑","Be so good they simply cannot ignore you. 🌟","If it were easy, everyone would do it. That's the point. 🔥","Scars prove you survived what tried to break you. 💯","Hustle until your name needs no introduction. 👑","Every expert was once a beginner who refused to stop. 🚀","You are not your past. You are your next decision. ⚡","Success is rented. Rent is due every single day. 💼","Make yourself proud first. Let others catch up later. 🏆","One day or day one. Your choice, always. ✦","Fear fades. Regret is permanent. Act now. 🎯","They said impossible. I turned it into I'm possible. 💫","Grow through what you go through. Never just survive it. 🌱","Motivation isn't found — it's built one habit at a time. 🔥","Your strongest self emerges from your hardest moments. 💪","Progress, not perfection. Show up every single day. 📈","Chase greatness relentlessly. Rest comes after. 🚀","Be someone who makes others believe again. 🌟","Your mindset is your most powerful weapon. Keep it sharp. 🔑","Nothing worth having arrives without sacrifice. Pay the price. 💰","The world makes room for those who know what they want. 🌍","Nobody is coming to save you. Save yourself. ⚡","Legacy is built in the moments you could have quit. 🏆"]
+};
+
+let activeCat='attitude',curBio='';
+function selCat(cat){playTap();activeCat=cat;document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));document.getElementById('cat'+cat.charAt(0).toUpperCase()+cat.slice(1)).classList.add('active');}
+function genBio(){
+  playGenerate();
+  const pool=BIOS[activeCat];curBio=pool[Math.floor(Math.random()*pool.length)];
+  const box=document.getElementById('bioBox');box.classList.add('lit');box.innerHTML=`<div class="bio-txt">${curBio}</div>`;
+  document.getElementById('bioActs').style.display='flex';
+  document.getElementById('bioMeta').textContent='— '+T(activeCat==='motivational'?'boost':activeCat==='attitude'?'attitude':'sad');
+}
+function copyBio(){if(curBio)copyText(curBio,null);}
+function renderQBios(){
+  const w=document.getElementById('qbios');if(w.hasChildNodes())return;
+  const all=[...BIOS.attitude.slice(0,4),...BIOS.motivational.slice(0,3),...BIOS.sad.slice(0,3)];
+  all.sort(()=>Math.random()-.5).slice(0,6).forEach((bio,i)=>{
+    const row=document.createElement('div');row.className='row-res';row.style.animationDelay=i*55+'ms';
+    const txt=document.createElement('div');txt.className='name-txt';txt.style.cssText='text-align:left;font-size:13px;font-weight:500';txt.textContent=bio;
+    const chip=document.createElement('button');chip.className='chip';chip.textContent='COPY';
+    chip.onclick=e=>{e.stopPropagation();copyText(bio,chip);};
+    row.appendChild(txt);row.appendChild(chip);row.onclick=()=>copyText(bio,null);w.appendChild(row);
+  });
+}
+
+/* FANCY TEXT */
+const FDEFS=[
+  {l:'Bold',f:t=>cw(t,US.bold)},{l:'Italic',f:t=>cw(t,US.italic)},{l:'Bold Italic',f:t=>cw(t,US.bi)},
+  {l:'Script',f:t=>cw(t,US.scr)},{l:'Bold Script',f:t=>cw(t,US.bscr)},{l:'Fraktur',f:t=>cw(t,US.frak)},
+  {l:'Bold Fraktur',f:t=>cw(t,US.bfrak)},{l:'Double Struck',f:t=>cw(t,US.dbl)},{l:'Monospace',f:t=>cw(t,US.mono)},
+  {l:'Sans',f:t=>cw(t,US.sans)},{l:'Bubble',f:t=>cm(t,BBLE)},{l:'Squared',f:t=>cm(t,SQB)},
+  {l:'Superscript',f:t=>t.toLowerCase().split('').map(c=>CAPS[c]||c).join('')},
+  {l:'Subscript',f:t=>t.toLowerCase().split('').map(c=>SMALL[c]||c).join('')},
+  {l:'Flipped',f:t=>cm(t,FLIP)},{l:'Wide Spaced',f:t=>[...t].join('\u2005')},
+  {l:'★ Starred ★',f:t=>[...t.toUpperCase()].join('★')},{l:'· Dotted ·',f:t=>[...t.toUpperCase()].join('·')},
+  {l:'✦ Glam ✦',f:t=>`✦${cw(t,US.bold).toUpperCase()}✦`},{l:'꧁ Crown ꧂',f:t=>`꧁${t}꧂`},
+  {l:'【 Box 】',f:t=>`【${t.toUpperCase()}】`},{l:'《 Angle 》',f:t=>`《${t.toUpperCase()}》`},
+  {l:'彡 Warrior 彡',f:t=>`彡 ${cw(t,US.italic)} 彡`},{l:'⚡ Energy ⚡',f:t=>`⚡${cw(t,US.bscr)}⚡`},
+];
+function convFancy(){
+  const txt=document.getElementById('fancyIn').value,wrap=document.getElementById('fancyRes');
+  if(!txt.trim()){wrap.innerHTML=`<div class="empty"><div class="eico">🔮</div><p>${T('startTyping')}</p></div>`;return;}
+  const list=document.createElement('div');list.className='fancy-list';
+  FDEFS.forEach((def,i)=>{
+    const out=def.f(txt);
+    const row=document.createElement('div');row.className='fancy-row';row.style.animationDelay=i*20+'ms';
+    const stag=document.createElement('span');stag.className='stag';stag.textContent=def.l;
+    const ftxt=document.createElement('div');ftxt.className='fancy-txt';ftxt.textContent=out;
+    const chip=document.createElement('button');chip.className='chip';chip.textContent='COPY';
+    chip.onclick=e=>{e.stopPropagation();copyText(out,chip);};
+    row.appendChild(stag);row.appendChild(ftxt);row.appendChild(chip);row.onclick=()=>copyText(out,null);
+    list.appendChild(row);
+  });
+  wrap.innerHTML='';wrap.appendChild(list);
+}
+
+/* SYMBOLS */
+const SYMS=['✦','✧','★','☆','✩','✪','✫','✬','✭','✮','✯','✰','❋','✿','❀','❁','❂','❃','❄','❅','❆','❇','❈','❉','❊','❖','◈','◉','◊','◍','⊕','⊗','⊙','⊚','⊛','♦','♥','♠','♣','♟','⚡','⚔','⚜','⚙','⛤','⛧','☯','☸','✝','☮','♻','⚘','❧','☙','♾','∞','≋','≈','∴','∵','∼','∽','⌘','⌥','⌦','⌫','彡','乂','亗','ツ','シ','ヅ','꩜','꧁','꧂','༄','༅','༆','༈','༉','☀','☁','☂','☃','⭐','💫','🌟','✨','💥','🔥','❄','🌊','🌈','🔮','💎','👑','🗡','🔱','⚜'];
+let symsOk=false;
+function renderSyms(){
+  if(symsOk)return;symsOk=true;
+  const g=document.getElementById('symG'),f=document.createDocumentFragment();
+  SYMS.forEach((s,i)=>{
+    const cell=document.createElement('div');cell.className='sym-cell';cell.textContent=s;cell.style.animationDelay=i*11+'ms';
+    cell.onclick=()=>{copyText(s,null);const fl=document.createElement('div');fl.className='sym-flash';cell.appendChild(fl);setTimeout(()=>fl.remove(),420);};
+    f.appendChild(cell);
+  });
+  g.appendChild(f);
+}
+
+/* INIT — check saved lang */
+(function(){
+  try{
+    const saved=localStorage.getItem('sc_lang');
+    if(saved&&LANGS[saved]){
+      splashLang=saved;
+      document.getElementById('langScreen').style.display='none';
+      const appEl=document.getElementById('app');appEl.style.display='block';
+      applyLang(saved);renderQBios();return;
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
